@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar" android:textColor="@android:color/white">
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="AppToolbarStyle" parent="Widget.MaterialComponents.Toolbar">
+        <!-- Title text color -->
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <!-- Subtitle text color -->
+        <item name="android:textColorSecondary">@android:color/white</item>
+    </style>
+</resources>
