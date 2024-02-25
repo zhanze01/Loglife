@@ -21,8 +21,6 @@ public class DiaryDataBaseHelper {
     private void initDatabase() {
         // Erstellen der Datenbank; benötigt werden Kontext, Klasse der Datenbank, die man erstellen will und der Name der Datenbank
         db = Room.databaseBuilder(context, DiaryDataBase.class, DATABASE_NAME)
-                // ermöglicht das Ausführen von Datenbankabfragen im MainThread (wird nicht empfohlen!)
-                .allowMainThreadQueries()
                 .build();
     }
 
