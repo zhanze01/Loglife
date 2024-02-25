@@ -5,6 +5,7 @@ import android.content.Context;
 import androidx.room.Room;
 
 import com.school.loglife.Diaries.Diary;
+import com.school.loglife.Users.User;
 
 import java.util.ArrayList;
 
@@ -38,4 +39,6 @@ public class DiaryDataBaseHelper {
     public ArrayList<Diary> getAllTasks() {
         return new ArrayList<Diary>(db.diaryDao().getAllDiary());
     }
+
+    public void addUser(User user) {db.userDao().insert(user);}
 }
