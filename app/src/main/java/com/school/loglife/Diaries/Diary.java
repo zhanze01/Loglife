@@ -3,21 +3,33 @@ package com.school.loglife.Diaries;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+
+import com.school.loglife.Users.User;
 
 import java.util.Date;
 import java.util.UUID;
 
-@Entity(tableName = "diary")
+@Entity(tableName = "diary",
+        foreignKeys = @ForeignKey(entity = User.class,
+                parentColumns = "userId",
+                childColumns = "userId",
+                onDelete = ForeignKey.CASCADE))
 public class Diary {
+    @PrimaryKey
+    @NonNull
     public String id;
     public String name;
     public Date createdAt;
     public String content;
 
-    public Diary(String name, String content) {
+    public int userId;
+
+    public Diary(int userId, String name, String content) {
         this.id = UUID.randomUUID().toString();
+        this.userId = userId;
         this.name = name;
         this.createdAt = new Date();
         this.content = content;

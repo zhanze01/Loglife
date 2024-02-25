@@ -10,4 +10,6 @@ public abstract class DiaryDataBase extends RoomDatabase {
 
     public abstract DiaryDao diaryDao();
 
+    public abstract UserDao userDao();
+
 }
