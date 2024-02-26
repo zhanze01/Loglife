@@ -22,6 +22,7 @@ public class DiaryDataBaseHelper {
     private void initDatabase() {
         // Erstellen der Datenbank; benötigt werden Kontext, Klasse der Datenbank, die man erstellen will und der Name der Datenbank
         db = Room.databaseBuilder(context, DiaryDataBase.class, DATABASE_NAME)
+                .allowMainThreadQueries()
                 .build();
     }
 
@@ -40,5 +41,12 @@ public class DiaryDataBaseHelper {
         return new ArrayList<Diary>(db.diaryDao().getAllDiary());
     }
 
-    public void addUser(User user) {db.userDao().insert(user);}
+    public void addUser(User user) {
+        db.userDao().insert(user);
+    }
+
+    public User findUser(String username, String password) {
+        return db.userDao().getUserByUsernameAndPassword(username, password);
+    }
+
 }
