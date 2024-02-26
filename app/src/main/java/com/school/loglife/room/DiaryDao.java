@@ -21,4 +21,6 @@ public interface DiaryDao {
     // Alle Datenpunkte der Tabelle "task_table" zurückgeben
     @Query("SELECT * FROM diary")
     List<Diary> getAllDiary();
+
+
 }
