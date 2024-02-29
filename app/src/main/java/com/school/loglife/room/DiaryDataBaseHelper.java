@@ -8,6 +8,7 @@ import com.school.loglife.Diaries.Diary;
 import com.school.loglife.Users.User;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class DiaryDataBaseHelper {
     private static final String DATABASE_NAME = "diary-db";
@@ -37,16 +38,28 @@ public class DiaryDataBaseHelper {
     }
 
     // alle in der Datenbank existierenden Tasks holen
-    public ArrayList<Diary> getAllTasks() {
-        return new ArrayList<Diary>(db.diaryDao().getAllDiary());
+    public List<Diary> getAllTasks(int userid) {
+        return db.diaryDao().getAllDiary(userid);
+    }
+
+    public void deleteDiary(Diary diary) {
+        db.diaryDao().deleteDiary(diary);
     }
 
     public void addUser(User user) {
         db.userDao().insert(user);
     }
 
+    public void deleteAll() {
+        db.userDao().deleteAll();
+    }
+
     public User findUser(String username, String password) {
         return db.userDao().getUserByUsernameAndPassword(username, password);
+    }
+
+    public User findUser(String username) {
+        return db.userDao().getUserByUsername(username);
     }
 
 }

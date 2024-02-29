@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
@@ -15,19 +16,27 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.school.loglife.Diaries.Diary;
+import com.school.loglife.Diaries.DiaryManager;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class DiaryActivity extends AppCompatActivity {
 
     private ListView diaryListView;
     private ArrayList<String> diaryEntries;
     private ArrayAdapter<String> diaryAdapter;
+    private DiaryManager diaryManager;
+
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_diary);
+        diaryManager = new DiaryManager(getApplicationContext());
+        Intent intent = getIntent();
+        int userid = intent.getIntExtra("userid", -1);
 
         diaryListView = findViewById(R.id.diaryList);
         diaryEntries = new ArrayList<>();
@@ -53,10 +62,12 @@ public class DiaryActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String newEntry = input.getText().toString().trim();
-                        if (!newEntry.isEmpty()) {
+                        if (!newEntry.isEmpty() && userid != -1) {
+                            Diary diary = new Diary(userid, "seb" + UUID.randomUUID().toString(), newEntry);
                             addDiaryEntry(newEntry);
+                            diaryManager.addDiary(diary);
                         } else {
-                            Toast.makeText(DiaryActivity.this, "Eintrag darf nicht leer sein", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(DiaryActivity.this, "cant be added", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -74,7 +85,7 @@ public class DiaryActivity extends AppCompatActivity {
 
         diaryListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id){
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 String entryToDelete = diaryEntries.get(position);
                 diaryEntries.remove(position);
                 diaryAdapter.notifyDataSetChanged();
@@ -83,9 +94,10 @@ public class DiaryActivity extends AppCompatActivity {
             }
         });
 
-        }
-        private void addDiaryEntry(String entry){
-            diaryEntries.add(entry);
-            diaryAdapter.notifyDataSetChanged();
+    }
+
+    private void addDiaryEntry(String entry) {
+        diaryEntries.add(entry);
+        diaryAdapter.notifyDataSetChanged();
     }
 }
