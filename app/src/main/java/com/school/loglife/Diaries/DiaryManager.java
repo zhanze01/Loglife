@@ -26,4 +26,8 @@ public class DiaryManager {
         db.deleteDiary(diary);
     }
 
+    public void deleteAllDiaries() {
+        db.deleteAllDiaries();
+    }
+
 }

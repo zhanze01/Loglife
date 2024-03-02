@@ -20,12 +20,12 @@ import java.util.UUID;
 public class Diary {
     @PrimaryKey
     @NonNull
-    public String id;
-    public String name;
-    public Date createdAt;
-    public String content;
+    private String id;
+    private String name;
+    private Date createdAt;
+    private String content;
 
-    public int userId;
+    private int userId;
 
     public Diary(int userId, String name, String content) {
         this.id = UUID.randomUUID().toString();
@@ -66,6 +66,11 @@ public class Diary {
     public void setContent(String content) {
         this.content = content;
     }
+
+    public int getUserId() {
+        return userId;
+    }
+
     @Override
     public String toString() {
         return "Diary{" +

@@ -54,6 +54,10 @@ public class DiaryDataBaseHelper {
         db.userDao().deleteAll();
     }
 
+    public void deleteAllDiaries() {
+        db.diaryDao().deleteAll();
+    }
+
     public User findUser(String username, String password) {
         return db.userDao().getUserByUsernameAndPassword(username, password);
     }

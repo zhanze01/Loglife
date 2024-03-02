@@ -27,5 +27,8 @@ public interface DiaryDao {
     @Query("SELECT * FROM diary where userid=:userid")
     List<Diary> getAllDiary(int userid);
 
+    @Query("Delete FROM diary")
+    void deleteAll();
+
 
 }

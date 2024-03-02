@@ -82,7 +82,6 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, DiaryActivity.class);
                 intent.putExtra("userid", user.getUserId());
                 startActivity(intent);
-                //manager.deleteAll();
             }
         }
     }
@@ -124,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     manager.addUser(username, encrypt(password));
                     System.out.println(encrypt(password));
+                    //manager.deleteAll();
                 } catch (Exception e) {
                     System.out.println("wrong" + e.getMessage());
                 }
