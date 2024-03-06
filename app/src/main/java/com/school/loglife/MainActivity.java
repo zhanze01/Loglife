@@ -3,6 +3,7 @@ package com.school.loglife;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,6 +13,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.school.loglife.Users.User;
 import com.school.loglife.Users.UserManager;
+
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -23,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private Button login;
     private String username;
     private String password;
+    private static final String AES_KEY = "ASDFGHJKLASDFGHJ";
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,23 +60,48 @@ public class MainActivity extends AppCompatActivity {
         t.setTextColor(Color.RED);
         username = u.getText().toString();
         password = p.getText().toString();
+        String password1 = "";
         if ((username == null) || (username.equals("")) || (password == null) || (password.equals(""))) {
             t.setText("username and password cant be empty, please retry");
             u.setText("");
             p.setText("");
         } else {
-            User user = manager.getUser(username, password);
+            User user = manager.getUser(username);
             t.setText("");
-            if (user == null) {
+            try {
+                password1 = decrypt(user.getPassword());
+                System.out.println(password1);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+            if ((user == null) || (!password1.equals(password))) {
                 t.setText("username or password invalid, please retry");
                 u.setText("");
                 p.setText("");
             } else {
                 Intent intent = new Intent(this, DiaryActivity.class);
-                intent.putExtra("user", user.getUsername());
+                intent.putExtra("userid", user.getUserId());
                 startActivity(intent);
             }
         }
+    }
+
+    public String encrypt(String data) throws Exception {
+        Cipher cipher = Cipher.getInstance("AES");
+        SecretKey secretKey = new SecretKeySpec(AES_KEY.getBytes(), "AES");
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+        byte[] encryptedBytes = cipher.doFinal(data.getBytes());
+        return Base64.encodeToString(encryptedBytes, Base64.DEFAULT);
+    }
+
+    // Decrypt data
+    public String decrypt(String encryptedData) throws Exception {
+        byte[] encryptedBytes = Base64.decode(encryptedData, Base64.DEFAULT);
+        SecretKey secretKey = new SecretKeySpec(AES_KEY.getBytes(), "AES");
+        Cipher cipher = Cipher.getInstance("AES");
+        cipher.init(Cipher.DECRYPT_MODE, secretKey);
+        byte[] decryptedBytes = cipher.doFinal(encryptedBytes);
+        return new String(decryptedBytes);
     }
 
     public void initRegister() {
@@ -81,11 +113,26 @@ public class MainActivity extends AppCompatActivity {
             u.setText("");
             p.setText("");
         } else {
-            t.setTextColor(Color.GREEN);
-            t.setText("register sucessful!");
-            u.setText("");
-            p.setText("");
-            manager.addUser(username, password);
+            User user = manager.getUser(username);
+            if (user != null) {
+                t.setTextColor(Color.RED);
+                t.setText("username already exits");
+                u.setText("");
+                p.setText("");
+            } else {
+                try {
+                    manager.addUser(username, encrypt(password));
+                    System.out.println(encrypt(password));
+                    //manager.deleteAll();
+                } catch (Exception e) {
+                    System.out.println("wrong" + e.getMessage());
+                }
+                t.setTextColor(Color.GREEN);
+                t.setText("register sucessful!");
+                u.setText("");
+                p.setText("");
+
+            }
         }
     }
 }

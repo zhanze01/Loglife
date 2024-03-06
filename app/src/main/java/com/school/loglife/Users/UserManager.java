@@ -19,8 +19,16 @@ public class UserManager {
         db.addUser(user);
     }
 
+    public void deleteAll() {
+        db.deleteAll();
+    }
+
     public User getUser(String username, String password) {
         return db.findUser(username, password);
+    }
+
+    public User getUser(String username) {
+        return db.findUser(username);
     }
 
 }
