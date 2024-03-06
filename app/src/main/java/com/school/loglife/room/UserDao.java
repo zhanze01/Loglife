@@ -1,6 +1,7 @@
 package com.school.loglife.room;
 
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 
@@ -16,8 +17,15 @@ public interface UserDao {
     @Query("SELECT * FROM users")
     List<User> getAllUsers();
 
-    @Query("SELECT * FROM users WHERE userId = :userId")
+    @Query("Delete FROM users")
+    void deleteAll();
+
+    @Query("SELECT * FROM users WHERE userid = :userId")
     User getUserById(int userId);
 
-    // Weitere Abfragen oder Operationen für Benutzer können hier definiert werden
+    @Query("select * from users where username=:username")
+    User getUserByUsername(String username);
+
+    @Query("select * from users where username=:username and password=:password")
+    User getUserByUsernameAndPassword(String username, String password);
 }

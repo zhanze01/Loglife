@@ -1,13 +1,19 @@
 package com.school.loglife.Users;
+
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "users")
 public class User {
     @PrimaryKey(autoGenerate = true)
     private int userId;
+    @ColumnInfo(name = "username")
     private String username;
+    @ColumnInfo(name = "password")
     private String password;
+
 
     public User(String username, String password) {
         this.username = username;
@@ -39,7 +45,7 @@ public class User {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return "User: " + username + "\n " + "ID: " + userId;
     }
 }
