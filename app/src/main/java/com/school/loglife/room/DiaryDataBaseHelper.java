@@ -37,6 +37,10 @@ public class DiaryDataBaseHelper {
         db.diaryDao().updateDiary(diary);
     }
 
+    public Diary findDiaryById(String diaryid) {
+       return db.diaryDao().getDiary(diaryid);
+    }
+
     // alle in der Datenbank existierenden Tasks holen
     public List<Diary> getAllTasks(int userid) {
         return db.diaryDao().getAllDiary(userid);
