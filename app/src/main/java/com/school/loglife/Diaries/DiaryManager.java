@@ -18,6 +18,14 @@ public class DiaryManager {
         db.addDiary(diary);
     }
 
+    public Diary findDiary(String diaryid) {
+        return db.findDiaryById(diaryid);
+    }
+
+    public void updateDiary(Diary diary) {
+        db.update(diary);
+    }
+
     public List<Diary> getAllDiaries(int userid) {
         return db.getAllTasks(userid);
     }
