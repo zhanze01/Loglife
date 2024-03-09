@@ -70,12 +70,6 @@ public class DiaryActivity extends AppCompatActivity {
         });
 
 
-        //diaryListView = findViewById(R.id.diaryList);
-        //diaryEntries = new ArrayList<>();
-        //diaryAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, diaryEntries);
-
-        //diaryListView.setAdapter(diaryAdapter);
-
         FloatingActionButton fab = findViewById(R.id.floatingActionButton);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,6 +81,10 @@ public class DiaryActivity extends AppCompatActivity {
                 // Erstelle ein Eingabefeld für den neuen Eintrag
                 final EditText input = new EditText(DiaryActivity.this);
                 input.setInputType(InputType.TYPE_CLASS_TEXT);
+
+                // Setze die Hintergrundfarbe für das Eingabefeld
+                input.setBackgroundResource(android.R.drawable.edit_text);
+
                 builder.setView(input);
 
                 // Füge Buttons für "Hinzufügen" und "Abbrechen" hinzu
@@ -98,7 +96,6 @@ public class DiaryActivity extends AppCompatActivity {
                             Diary diary = new Diary(userid, newEntry, "");
                             addDiaryEntry(diary);
                             diaryManager.addDiary(diary);
-                            //diaryManager.deleteAllDiaries();
                         } else {
                             Toast.makeText(DiaryActivity.this, "cant be added", Toast.LENGTH_SHORT).show();
                         }
