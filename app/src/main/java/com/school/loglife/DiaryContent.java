@@ -59,7 +59,6 @@ public class DiaryContent extends AppCompatActivity {
             error.setTextColor(Color.RED);
             error.setText("could not find content");
         }
-
     }
 
     public void edit() {

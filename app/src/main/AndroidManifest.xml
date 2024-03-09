@@ -6,6 +6,12 @@
         android:allowBackup="true"
         android:theme="@style/AppTheme" >
         <activity
+            android:name=".KontoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ContactActivity"
+            android:exported="false" />
+        <activity
             android:name=".DiaryContent"
             android:exported="false" />
         <activity

@@ -5,15 +5,23 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.school.loglife.Diaries.Diary;
 import com.school.loglife.Diaries.DiaryManager;
@@ -22,14 +30,13 @@ import com.school.loglife.UI.DiaryAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DiaryActivity extends AppCompatActivity {
+public class DiaryActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
 
     private ListView diaryListView;
-    //private ArrayList<String> diaryEntries;
-    //private ArrayAdapter<String> diaryAdapter;
     private DiaryManager diaryManager;
     private List<Diary> diaryList;
     private DiaryAdapter diaryAdapter;
+    private ImageView menu;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -37,6 +44,7 @@ public class DiaryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_diary);
         diaryListView = findViewById(R.id.diaryList);
+        menu = findViewById(R.id.menu);
         diaryManager = new DiaryManager(getApplicationContext());
         Intent intent = getIntent();
         int userid = intent.getIntExtra("userid", -1);
@@ -69,12 +77,12 @@ public class DiaryActivity extends AppCompatActivity {
             }
         });
 
-
-        //diaryListView = findViewById(R.id.diaryList);
-        //diaryEntries = new ArrayList<>();
-        //diaryAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, diaryEntries);
-
-        //diaryListView.setAdapter(diaryAdapter);
+        menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPopUp(v);
+            }
+        });
 
         FloatingActionButton fab = findViewById(R.id.floatingActionButton);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -127,5 +135,33 @@ public class DiaryActivity extends AppCompatActivity {
         diaryAdapter.notifyDataSetChanged();
     }
 
+    public void showPopUp(View v) {
+        PopupMenu popupMenu = new PopupMenu(this, v);
+        popupMenu.setOnMenuItemClickListener(this);
+        popupMenu.inflate(R.menu.popup_menu);
+        popupMenu.show();
+    }
 
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.logout:
+                Toast.makeText(this, "see you next time", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.konto:
+                Intent i = getIntent();
+                int userid = i.getIntExtra("userid", -1);
+                Intent intent1 = new Intent(getApplicationContext(), KontoActivity.class);
+                intent1.putExtra("userid", userid);
+                startActivity(intent1);
+                return true;
+            case R.id.contact:
+                Intent intent2 = new Intent(getApplicationContext(), ContactActivity.class);
+                startActivity(intent2);
+                return true;
+        }
+        return false;
+    }
 }

@@ -14,7 +14,8 @@
         android:theme="@style/AppToolbarStyle"
         app:layout_constraintTop_toTopOf="parent"
         app:title="Welcome to Loglife"
-        app:titleCentered="true"/>
+        app:titleCentered="true"
+        app:titleMarginTop="20dp"/>
 
     <LinearLayout
         android:id="@+id/input_elements"
