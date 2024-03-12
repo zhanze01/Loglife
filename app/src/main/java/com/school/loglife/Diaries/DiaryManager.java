@@ -2,6 +2,8 @@ package com.school.loglife.Diaries;
 
 import android.content.Context;
 
+import androidx.room.Delete;
+
 import com.school.loglife.room.DiaryDataBaseHelper;
 
 import java.util.List;

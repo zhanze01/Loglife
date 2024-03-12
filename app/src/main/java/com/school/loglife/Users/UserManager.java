@@ -31,4 +31,13 @@ public class UserManager {
         return db.findUser(username);
     }
 
+    public User getUser(int userid) {
+        return db.findUserById(userid);
+    }
+
+    public void updateUser(User user) {
+        db.updateUser(user);
+    }
+
+
 }

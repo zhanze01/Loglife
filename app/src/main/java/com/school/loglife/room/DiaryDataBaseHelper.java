@@ -1,5 +1,6 @@
 package com.school.loglife.room;
 
+
 import android.content.Context;
 
 import androidx.room.Room;
@@ -38,7 +39,7 @@ public class DiaryDataBaseHelper {
     }
 
     public Diary findDiaryById(String diaryid) {
-       return db.diaryDao().getDiary(diaryid);
+        return db.diaryDao().getDiary(diaryid);
     }
 
     // alle in der Datenbank existierenden Tasks holen
@@ -68,6 +69,14 @@ public class DiaryDataBaseHelper {
 
     public User findUser(String username) {
         return db.userDao().getUserByUsername(username);
+    }
+
+    public User findUserById(int userid) {
+        return db.userDao().getUserById(userid);
+    }
+
+    public void updateUser(User user) {
+        db.userDao().update(user);
     }
 
 }

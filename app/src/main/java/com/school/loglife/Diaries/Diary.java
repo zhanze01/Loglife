@@ -1,7 +1,6 @@
 package com.school.loglife.Diaries;
 
 import androidx.annotation.NonNull;
-import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
@@ -24,8 +23,8 @@ public class Diary {
     private String name;
     private Date createdAt;
     private String content;
-
     private int userId;
+
 
     public Diary(int userId, String name, String content) {
         this.id = UUID.randomUUID().toString();
@@ -33,6 +32,10 @@ public class Diary {
         this.name = name;
         this.createdAt = new Date();
         this.content = content;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public String getId() {
