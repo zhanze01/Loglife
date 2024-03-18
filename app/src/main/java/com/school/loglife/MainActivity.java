@@ -4,11 +4,15 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Base64;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.school.loglife.Users.User;
@@ -44,14 +48,38 @@ public class MainActivity extends AppCompatActivity {
         t = (TextView) findViewById(R.id.error);
         register = (Button) findViewById(R.id.Register);
         login = (Button) findViewById(R.id.Login);
-        register.setOnClickListener(new View.OnClickListener() {
+
+       /* register.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 initRegister();
             }
+        });*/
+        register.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        initRegister();
+                        return true;
+                }
+                return false;
+            }
         });
-        login.setOnClickListener(new View.OnClickListener() {
+   /*     login.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 initLogin();
+            }
+        });*/
+
+        login.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        initLogin();
+                        return true;
+                }
+                return false;
             }
         });
     }
@@ -94,7 +122,6 @@ public class MainActivity extends AppCompatActivity {
         return Base64.encodeToString(encryptedBytes, Base64.DEFAULT);
     }
 
-    // Decrypt data
     public String decrypt(String encryptedData) throws Exception {
         byte[] encryptedBytes = Base64.decode(encryptedData, Base64.DEFAULT);
         SecretKey secretKey = new SecretKeySpec(AES_KEY.getBytes(), "AES");
@@ -131,7 +158,6 @@ public class MainActivity extends AppCompatActivity {
                 t.setText("register sucessful!");
                 u.setText("");
                 p.setText("");
-
             }
         }
     }
