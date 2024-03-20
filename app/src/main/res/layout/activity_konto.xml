@@ -78,7 +78,7 @@
 
     <Button
         android:id="@+id/leave"
-        android:layout_width="121"
+        android:layout_width="20dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:layout_below="@id/updatepass"
