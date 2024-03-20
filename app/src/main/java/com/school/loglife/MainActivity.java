@@ -1,8 +1,13 @@
 package com.school.loglife;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
@@ -10,6 +15,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.school.loglife.Users.User;
 import com.school.loglife.Users.UserManager;
@@ -31,8 +39,19 @@ public class MainActivity extends AppCompatActivity {
     private String password;
     private static final String AES_KEY = "ASDFGHJKLASDFGHJ";
 
+    private static final String CHANNEL_ID = "channel1";
+    private static final String CHANNEL_NAME = "Channel";
+    private static final String CHANNEL_DESC = "Channel Notify";
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
+            channel.setDescription(CHANNEL_DESC);
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
+
         init();
     }
 
@@ -54,6 +73,42 @@ public class MainActivity extends AppCompatActivity {
                 initLogin();
             }
         });
+    }
+
+    public void displayNotificationWithDelay() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                displayNotification();
+            }
+        }, 10000); // 10 sek
+    }
+
+    public void displayNotification() {
+        // Benachrichtigung erstellen
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this, CHANNEL_ID)
+                        .setSmallIcon(R.drawable.baseline_deblur_24)
+                        .setContentTitle("Mach einen Blog Eintrag")
+                        .setContentText("Erstelle jetzt einen neuen Eintrag für deinen Blog")
+                        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                        .setAutoCancel(true)
+                        .setStyle(new NotificationCompat.BigTextStyle()
+                                .bigText("Erstelle jetzt einen neuen Eintrag für deinen Blog"));
+
+        // Benachrichtigung anzeigen
+        NotificationManagerCompat mNotificationMngr = NotificationManagerCompat.from(this);
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        mNotificationMngr.notify(1, mBuilder.build());
     }
 
     public void initLogin() {
@@ -81,10 +136,12 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 Intent intent = new Intent(this, DiaryActivity.class);
                 intent.putExtra("userid", user.getUserId());
+                displayNotificationWithDelay();
                 startActivity(intent);
             }
         }
     }
+
 
     public String encrypt(String data) throws Exception {
         Cipher cipher = Cipher.getInstance("AES");

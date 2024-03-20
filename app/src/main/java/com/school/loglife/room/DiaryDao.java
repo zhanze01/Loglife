@@ -23,12 +23,16 @@ public interface DiaryDao {
     @Delete
     void deleteDiary(Diary diary);
 
+    @Query("SELECT * FROM diary where id=:diaryid")
+    Diary getDiary(String diaryid);
+
     // Alle Datenpunkte der Tabelle "task_table" zurückgeben
     @Query("SELECT * FROM diary where userid=:userid")
     List<Diary> getAllDiary(int userid);
 
     @Query("Delete FROM diary")
     void deleteAll();
+
 
 
 }

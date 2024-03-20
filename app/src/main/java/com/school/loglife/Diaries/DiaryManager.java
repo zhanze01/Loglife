@@ -2,6 +2,8 @@ package com.school.loglife.Diaries;
 
 import android.content.Context;
 
+import androidx.room.Delete;
+
 import com.school.loglife.room.DiaryDataBaseHelper;
 
 import java.util.List;
@@ -16,6 +18,14 @@ public class DiaryManager {
 
     public void addDiary(Diary diary) {
         db.addDiary(diary);
+    }
+
+    public Diary findDiary(String diaryid) {
+        return db.findDiaryById(diaryid);
+    }
+
+    public void updateDiary(Diary diary) {
+        db.update(diary);
     }
 
     public List<Diary> getAllDiaries(int userid) {

@@ -12,9 +12,22 @@
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
+        android:theme="@style/AppToolbarStyle"
         app:titleCentered="true"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:title="Welcome Home"
+        app:layout_constraintTop_toTopOf="parent"
+        app:titleMarginTop="10dp"
+        />
+
+    <ImageView
+        android:id="@+id/menu"
+        android:layout_width="101dp"
+        android:layout_height="44dp"
+        android:layout_marginStart="308dp"
+        android:layout_marginTop="4dp"
+        android:src="@drawable/ic_menu"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"></ImageView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButton"
