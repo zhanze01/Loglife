@@ -1,11 +1,15 @@
 package com.school.loglife;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Base64;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,7 +22,7 @@ import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
-public class KontoActivity extends AppCompatActivity {
+public class KontoActivity extends AppCompatActivity implements View.OnTouchListener, GestureDetector.OnGestureListener{
     private EditText username;
     private EditText password;
     private Button cuser;
@@ -29,6 +33,7 @@ public class KontoActivity extends AppCompatActivity {
     private User user;
     private Button leave;
     private static final String AES_KEY = "ASDFGHJKLASDFGHJ";
+    private GestureDetector gestureDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +44,9 @@ public class KontoActivity extends AppCompatActivity {
     public void init() {
         setContentView(R.layout.activity_konto);
         Intent intent = getIntent();
+        View mainframe = this.findViewById(android.R.id.content);
+        gestureDetector = new GestureDetector(this, this);
+        mainframe.setOnTouchListener(this);
         int userid = intent.getIntExtra("userid", -1);
         manager = new UserManager(getApplicationContext());
         username = (EditText) findViewById(R.id.inputname);
@@ -73,6 +81,39 @@ public class KontoActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+        cuser.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_BUTTON_PRESS:
+                        changeName();
+                        return true;
+                }
+                return false;
+            }
+        });
+        cpass.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_BUTTON_PRESS:
+                        changePassword();
+                        return true;
+                }
+                return false;
+            }
+        });
+        leave.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_BUTTON_PRESS:
+                        finish();
+                        return true;
+                }
+                return false;
             }
         });
     }
@@ -139,4 +180,40 @@ public class KontoActivity extends AppCompatActivity {
         return new String(decryptedBytes);
     }
 
+    @Override
+    public boolean onDown(@NonNull MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public void onShowPress(@NonNull MotionEvent e) {
+
+    }
+
+    @Override
+    public boolean onSingleTapUp(@NonNull MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public boolean onScroll(@Nullable MotionEvent e1, @NonNull MotionEvent e2, float distanceX, float distanceY) {
+        return false;
+    }
+
+    @Override
+    public void onLongPress(@NonNull MotionEvent e) {
+
+    }
+
+    @Override
+    public boolean onFling(@Nullable MotionEvent e1, @NonNull MotionEvent e2, float velocityX, float velocityY) {
+        finish();
+        return false;
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        gestureDetector.onTouchEvent(event);
+        return true;
+    }
 }

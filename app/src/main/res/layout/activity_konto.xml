@@ -78,11 +78,11 @@
 
     <Button
         android:id="@+id/leave"
-        android:layout_width="20dp"
+        android:layout_width="121dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
         android:layout_below="@id/updatepass"
-        android:text="leave"
-        android:layout_alignParentEnd="true"/>
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="50dp"
+        android:text="leave" />
 
 </RelativeLayout>
