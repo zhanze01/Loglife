@@ -2,7 +2,11 @@ package com.school.loglife;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
+
+import androidx.core.app.RemoteInput;
+
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
@@ -113,6 +117,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void displayNotification() {
+        // Erstelle den Intent für die DiaryActivity
+        Intent diaryIntent = new Intent(this, DiaryActivity.class);
+        PendingIntent diaryPendingIntent = PendingIntent.getActivity(this, 0, diaryIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        // Erstelle den Intent für das Speichern des Eintrags
+        Intent saveEntryIntent = new Intent(this, MainActivity.class);
+        saveEntryIntent.setAction("SAVE_ENTRY_ACTION");
+        PendingIntent saveEntryPendingIntent = PendingIntent.getActivity(this, 0, saveEntryIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        // Erstelle das Eingabefeld
+        RemoteInput remoteInput = new RemoteInput.Builder("entry_text")
+                .setLabel("Neuer Eintrag")
+                .build();
+
+        // Füge das Eingabefeld zur Benachrichtigung hinzu
+        NotificationCompat.Action.Builder actionBuilder = new NotificationCompat.Action.Builder(
+                R.drawable.ic_yoda,
+                "Eintrag hinzufügen",
+                saveEntryPendingIntent)
+                .addRemoteInput(remoteInput);
+
         // Benachrichtigung erstellen
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this, CHANNEL_ID)
@@ -121,6 +146,8 @@ public class MainActivity extends AppCompatActivity {
                         .setContentText("Erstelle jetzt einen neuen Eintrag für deinen Blog")
                         .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                         .setAutoCancel(true)
+                        .setContentIntent(diaryPendingIntent)
+                        .addAction(actionBuilder.build())
                         .setStyle(new NotificationCompat.BigTextStyle()
                                 .bigText("Erstelle jetzt einen neuen Eintrag für deinen Blog"));
 
@@ -138,6 +165,7 @@ public class MainActivity extends AppCompatActivity {
         }
         mNotificationMngr.notify(1, mBuilder.build());
     }
+
 
     public void initLogin() {
         t.setTextColor(Color.RED);
