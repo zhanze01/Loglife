@@ -1,9 +1,16 @@
 package com.school.loglife;
 
 import android.annotation.SuppressLint;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.drawable.Icon;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.InputType;
 import android.view.GestureDetector;
 import android.view.MenuItem;
@@ -20,14 +27,21 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.app.RemoteInput;
+import androidx.core.graphics.drawable.IconCompat;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.school.loglife.Diaries.Diary;
 import com.school.loglife.Diaries.DiaryManager;
 import com.school.loglife.UI.DiaryAdapter;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class DiaryActivity extends AppCompatActivity implements View.OnTouchListener, GestureDetector.OnGestureListener, PopupMenu.OnMenuItemClickListener {
 
@@ -40,11 +54,24 @@ public class DiaryActivity extends AppCompatActivity implements View.OnTouchList
     private GestureDetector gestureDetector;
     private float startX;
     private float startY;
+    NotificationManagerCompat mNotificationMngr;
+
+    private static final String CHANNEL_ID = "channel1";
+    private static final String CHANNEL_NAME = "Channel";
+    private static final String CHANNEL_DESC = "Channel Notify";
+
 
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
+            channel.setDescription(CHANNEL_DESC);
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
+        displayNotificationWithDelay();
         gestureDetector = new GestureDetector(this, this);
         initView();
         initEintrag();
@@ -66,6 +93,7 @@ public class DiaryActivity extends AppCompatActivity implements View.OnTouchList
         }
         diaryAdapter = new DiaryAdapter(this, android.R.layout.simple_list_item_1, diaryList);
         diaryListView.setAdapter(diaryAdapter);
+
         diaryListView.setOnTouchListener(this);
         /*diaryListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -77,7 +105,6 @@ public class DiaryActivity extends AppCompatActivity implements View.OnTouchList
                 return true;
             }
         });
-
         diaryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -86,7 +113,9 @@ public class DiaryActivity extends AppCompatActivity implements View.OnTouchList
                 intent.putExtra("diaryid", diary.getId());
                 startActivity(intent);
             }
-        });*/
+        });
+        */
+
 
        /* menu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,6 +123,65 @@ public class DiaryActivity extends AppCompatActivity implements View.OnTouchList
                 showPopUp(v);
             }
         });*/
+    }
+
+    public void displayNotificationWithDelay() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                displayNotification();
+            }
+        }, 2000);
+
+    }
+
+
+    public void displayNotification() {
+        NotificationCompat.Builder mBuilder;
+        if (!diaryList.isEmpty()) {
+            Diary diary = diaryList.get(diaryList.size() - 1);
+            // Erstelle den Intent für das Speichern des Eintrags
+            Intent intent = new Intent(getApplicationContext(), DiaryContent.class);
+            intent.putExtra("diaryid", diary.getId());
+            PendingIntent saveEntryPendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            intent.setAction("SAVE_ENTRY_ACTION");
+            Locale loc = new Locale("en", "US");
+            DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT, loc);
+
+
+            NotificationCompat.Action.Builder actionBuilder = new NotificationCompat.Action.Builder(
+                    R.drawable.ic_yoda,
+                    "continue editing from last time-" + dateFormat.format(diary.getCreatedAt()),
+                    saveEntryPendingIntent);
+            mBuilder =
+                    new NotificationCompat.Builder(this, CHANNEL_ID)
+                            .setSmallIcon(R.drawable.baseline_deblur_24)
+                            .setContentTitle("Mach einen Blog Eintrag")
+                            .setContentText("Erstelle jetzt einen neuen Eintrag für deinen Blog")
+                            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                            .setAutoCancel(true)
+                            .addAction(actionBuilder.build())
+                            .setStyle(new NotificationCompat.BigTextStyle()
+                                    .bigText("Erstelle jetzt einen neuen Eintrag für deinen Blog"));
+        } else {
+            mBuilder =
+                    new NotificationCompat.Builder(this, CHANNEL_ID)
+                            .setSmallIcon(R.drawable.baseline_deblur_24)
+                            .setContentTitle("Mach einen Blog Eintrag")
+                            .setContentText("Erstelle jetzt einen neuen Eintrag für deinen Blog")
+                            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                            .setAutoCancel(true)
+                            .setStyle(new NotificationCompat.BigTextStyle()
+                                    .bigText("Erstelle jetzt einen neuen Eintrag für deinen Blog"));
+        }
+
+
+        // Benachrichtigung anzeigen
+        mNotificationMngr = NotificationManagerCompat.from(this);
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        mNotificationMngr.notify(1, mBuilder.build());
     }
 
     public void initMenu() {
@@ -154,8 +242,14 @@ public class DiaryActivity extends AppCompatActivity implements View.OnTouchList
     }
 
     public void deleteDiaryEntry(Diary diary) {
+        if (diaryList.get(diaryList.size()-1)==diary) {
+            mNotificationMngr.cancel(1);
+        }
         diaryList.remove(diary);
         diaryAdapter.notifyDataSetChanged();
+        if (diaryList.isEmpty()) {
+            mNotificationMngr.cancel(1);
+        }
     }
 
     public void showPopUp(View v) {

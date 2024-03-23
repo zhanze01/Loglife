@@ -36,6 +36,34 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 
+/*
+-----Funktionen Loglife-----
+MainActivity:
+        -Login,Register
+        -Speicherung in RoomDatenbank
+        -Verschlüsselung vom Passwort
+DiaryActivity:
+        -interactive Notification:
+        nach Login auftauchen,wenn Einträge bereits existieren,kann user auf action
+        "continue editing from last time- datetime" clicken, dann wird man zum neuesten Eintrag weitergeleitet.
+        -Eigner Listadapter für Einträge
+        -Floating button für neue Einträge
+        -Speicherung in Datenbank
+        -Touchgesteres
+            --longpress Einträge oder Fling auf Einträge zum Löschen
+        -Klick auf Eintrag, weiter zur Bearbeitung
+        -Burgermenu links oben
+DiaryContent
+        -Einträge bearbeiten und in Datenbank updaten(Save button)
+        -durch Fling die Seite verlassen
+KontoActivity
+        -Username, Passwort updaten
+        -durch Fling verlassen
+ContactActivity
+        -durch Fling verlassen
+*/
+
+
 public class MainActivity extends AppCompatActivity {
     private UserManager manager;
     private EditText u;
@@ -47,18 +75,18 @@ public class MainActivity extends AppCompatActivity {
     private String password;
     private static final String AES_KEY = "ASDFGHJKLASDFGHJ";
 
-    private static final String CHANNEL_ID = "channel1";
+  /*  private static final String CHANNEL_ID = "channel1";
     private static final String CHANNEL_NAME = "Channel";
     private static final String CHANNEL_DESC = "Channel Notify";
-
+*/
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      /*  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
             channel.setDescription(CHANNEL_DESC);
             NotificationManager manager = getSystemService(NotificationManager.class);
             manager.createNotificationChannel(channel);
-        }
+        }*/
 
         init();
     }
@@ -107,13 +135,13 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void displayNotificationWithDelay() {
+   /* public void displayNotificationWithDelay() {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 displayNotification();
             }
-        }, 10000); // 10 sek
+        }, 100); // 10 sek
     }
 
     public void displayNotification() {
@@ -166,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
         mNotificationMngr.notify(1, mBuilder.build());
     }
 
-
+*/
     public void initLogin() {
         t.setTextColor(Color.RED);
         username = u.getText().toString();
@@ -192,7 +220,7 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 Intent intent = new Intent(this, DiaryActivity.class);
                 intent.putExtra("userid", user.getUserId());
-                displayNotificationWithDelay();
+              /*  displayNotificationWithDelay();*/
                 startActivity(intent);
             }
         }

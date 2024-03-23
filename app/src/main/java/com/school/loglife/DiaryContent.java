@@ -1,10 +1,13 @@
 package com.school.loglife;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -15,7 +18,7 @@ import com.school.loglife.Diaries.Diary;
 import com.school.loglife.Diaries.DiaryManager;
 import com.school.loglife.Users.UserManager;
 
-public class DiaryContent extends AppCompatActivity {
+public class DiaryContent extends AppCompatActivity implements View.OnTouchListener, GestureDetector.OnGestureListener {
     private DiaryManager manager;
     private EditText edit;
     private Button save;
@@ -23,11 +26,15 @@ public class DiaryContent extends AppCompatActivity {
     private Diary diary;
     private Intent intent;
     private TextView error;
+    private GestureDetector gestureDetector;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        gestureDetector = new GestureDetector(this, this);
+        View mainframe = this.findViewById(android.R.id.content);
+        mainframe.setOnTouchListener(this);
         setContentView(R.layout.activity_diary_content);
         init();
 
@@ -105,5 +112,42 @@ public class DiaryContent extends AppCompatActivity {
             error.setTextColor(Color.RED);
             error.setText("content empty");
         }
+    }
+
+    @Override
+    public boolean onDown(@NonNull MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public void onShowPress(@NonNull MotionEvent e) {
+
+    }
+
+    @Override
+    public boolean onSingleTapUp(@NonNull MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public boolean onScroll(@Nullable MotionEvent e1, @NonNull MotionEvent e2, float distanceX, float distanceY) {
+        return false;
+    }
+
+    @Override
+    public void onLongPress(@NonNull MotionEvent e) {
+
+    }
+
+    @Override
+    public boolean onFling(@Nullable MotionEvent e1, @NonNull MotionEvent e2, float velocityX, float velocityY) {
+        finish();
+        return false;
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        gestureDetector.onTouchEvent(event);
+        return true;
     }
 }
